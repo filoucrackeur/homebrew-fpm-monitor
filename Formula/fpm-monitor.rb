@@ -15,11 +15,11 @@ class FpmMonitor < Formula
   version "1.0.0"
 
   url "https://github.com/filoucrackeur/php-fpm-monitor/releases/download/v1.0.0/fpm-monitor-x86_64-apple-darwin"
-  sha256 "85cc3424b6816eca0a1681c0d543213e047fb198d54f1d1cd05ff1206f89990f"
+  sha256 "b26357a649537c3e1f5c2bc58087b80db791bf360a0cb479e128476529631aa8"
 
   on_arm do
     url "https://github.com/filoucrackeur/php-fpm-monitor/releases/download/v1.0.0/fpm-monitor-aarch64-apple-darwin"
-    sha256 "8686aad0cc43bae37b821a9ec0289e7dfe07781fcc60f0df75572e7764ea3ae2"
+    sha256 "6a518cb0cc5f25ccd2f85cbbe204916c0f426e88681630243b556d0c10e943f8"
   end
 
   def install
