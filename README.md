@@ -1,6 +1,6 @@
 # Homebrew tap: filoucrackeur/fpm-monitor
 
-Homebrew tap for [php-fpm-monitor](https://github.com/filoucrackeur/php-fpm-monitor),
+Homebrew tap for [fpm-monitor](https://github.com/filoucrackeur/fpm-monitor),
 a PHP-FPM pools monitor written in Rust.
 
 ## Install
