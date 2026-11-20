@@ -13,14 +13,14 @@ class FpmMonitor < Formula
   desc "PHP-FPM pools monitor (Rust port of fpm-monitor.c)"
   homepage "https://github.com/filoucrackeur/fpm-monitor"
   license "MIT"
-  version "1.2.0"
+  version "1.2.1"
 
-  url "https://github.com/filoucrackeur/fpm-monitor/releases/download/v1.2.0/fpm-monitor-x86_64-apple-darwin"
-  sha256 "27850ea1ab77873dd2b130c98eb767b4bc68d18e4a1867de8a59e75db8aebd64"
+  url "https://github.com/filoucrackeur/fpm-monitor/releases/download/v1.2.1/fpm-monitor-x86_64-apple-darwin"
+  sha256 "e925f6ca2d13970c9b0f9f9f68c98a6d6cf99145a1e1ed57dccb45970b4c89de"
 
   on_arm do
-    url "https://github.com/filoucrackeur/fpm-monitor/releases/download/v1.2.0/fpm-monitor-aarch64-apple-darwin"
-    sha256 "1ad43efc25ae001dfaf38c9c99b2d616d4c008f8d11ecfb0b45dff7a636c24e3"
+    url "https://github.com/filoucrackeur/fpm-monitor/releases/download/v1.2.1/fpm-monitor-aarch64-apple-darwin"
+    sha256 "caf2081913e56636c20a69ee0b876a622402ebe84b0cd4267d9cd54b25b2ee45"
   end
 
   def install
