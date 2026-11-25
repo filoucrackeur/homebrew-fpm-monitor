@@ -1,0 +1,64 @@
+name: Sync formula with latest release
+
+# Le tap se met à jour tout seul : le workflow du dépôt source dépendait d'un
+# secret TAP_TOKEN absent. Ici, le GITHUB_TOKEN du tap suffit (écriture locale)
+# et la release source est publique (lecture seule).
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: formula-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: filoucrackeur/fpm-monitor
+    steps:
+      - name: Checkout tap
+        uses: actions/checkout@v7
+
+      - name: Find latest release
+        id: release
+        run: |
+          tag=$(gh api repos/"$GH_REPO"/releases/latest --jq .tag_name)
+          [ -n "$tag" ] || { echo "No release found" >&2; exit 1; }
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Download generated formula
+        run: |
+          mkdir -p "$RUNNER_TEMP/formula"
+          gh release download "${{ steps.release.outputs.tag }}" \
+            --pattern 'fpm-monitor.rb' \
+            --dir "$RUNNER_TEMP/formula"
+          cp "$RUNNER_TEMP/formula/fpm-monitor.rb" Formula/fpm-monitor.rb
+
+      - name: Verify formula matches release
+        run: |
+          version=$(sed -n 's/^  version "\(.*\)"/\1/p' Formula/fpm-monitor.rb)
+          expected="${{ steps.release.outputs.tag }}"
+          expected="${expected#v}"
+          echo "formula=$version release=$expected"
+          [ "$version" = "$expected" ] || { echo "Version mismatch" >&2; exit 1; }
+          grep -q "releases/download/${{ steps.release.outputs.tag }}/fpm-monitor-aarch64-apple-darwin" Formula/fpm-monitor.rb
+          grep -q "releases/download/${{ steps.release.outputs.tag }}/fpm-monitor-x86_64-apple-darwin" Formula/fpm-monitor.rb
+
+      - name: Commit and push if changed
+        run: |
+          git add Formula/fpm-monitor.rb
+          if git diff --cached --quiet; then
+            echo "Formula already up to date (${{ steps.release.outputs.tag }})."
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "Update formula to ${{ steps.release.outputs.tag }}"
+          git push
